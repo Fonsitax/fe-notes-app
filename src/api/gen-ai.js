@@ -1,31 +1,37 @@
-const path = "https://gen-ai-wbs-consumer-api.onrender.com/api/v1/";
-const pathCompletions = "chat/completions";
+import config from "../../config.js";
 
-
-const header = {
+const PATH = "https://gen-ai-wbs-consumer-api.onrender.com/api/v1/";
+const PATH_COMPLETIONS = "chat/completions";
+const API_TOKEN = config.apiToken;
+const headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer 6687f8f7d6853d82e4e752ce',
+    'Authorization': `Bearer ${API_TOKEN}`,
+    'provider': 'open-ai',
+    'mode': 'development'
 }
 
 
 export const postCompletion = async () => {
     try {
         const body = JSON.stringify({
-            prompt: 'Was ist die Hauptstadt von Deutschland?',
-            max_tokens: 200,
+            message: 'Was ist die Hauptstadt von Deutschland?',
+            // max_tokens: 200,
         });
 
 
-        const response = await fetch(`${path}${pathCompletions}`,
+        const response = await fetch(`${PATH}${PATH_COMPLETIONS}`,
             {
                 method: 'POST',
-                headers: header,
+                headers: headers,
                 body: body,
             });
-        if (response.ok) {
-            return await response.json();
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Request failed with status ${response.status}: ${errorText}`)
         }
+        return await response.json();
+
     } catch (error) {
-        console.error('Error in Post', error);
+        console.error(error);
     }
 }
