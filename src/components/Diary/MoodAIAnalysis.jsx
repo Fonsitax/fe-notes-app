@@ -4,12 +4,21 @@ import {postCompletion} from "@/api/gen-ai.js";
 
 const MoodAIAnalysis = ({entries}) => {
     const modalRef = useRef();
-    const [data, setData] = useState(null);
+    const [summary, setSummery] = useState('');
+
     const handleAISummary = async () => {
-        const response = await postCompletion();
-        setData(response);
-        console.log(data);
+        let entriesContent = '';
+        entries.forEach(entry => entriesContent = entriesContent + ", Diary entry: " + entry.content);
+
+        const message = {
+            "role": "user",
+            "content": `Can you create a mood/sentiment analysis based on the content of the following diary entries: ${entriesContent}`
+        };
+
+        const response = await postCompletion(message);
+        if (response) setSummery(response.message.content);
     };
+
 
     return (
         <>
@@ -31,7 +40,7 @@ const MoodAIAnalysis = ({entries}) => {
                     </div>
                     <div className='flex items-center gap-3'>
                         <div className='textarea textarea-success w-1/2 h-[400px] overflow-y-scroll'>
-                            {data}
+                            {summary}
                         </div>
                         <div className='textarea textarea-success w-1/2 h-[400px] overflow-y-scroll'>
                             <Charts aiSummary=''/>

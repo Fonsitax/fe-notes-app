@@ -1,5 +1,7 @@
 const config = {
-    apiToken: 'secret token'
+    apiToken: 'token',
+    mode: 'development',
+    // mode: 'production',
 };
 
 export default config;
