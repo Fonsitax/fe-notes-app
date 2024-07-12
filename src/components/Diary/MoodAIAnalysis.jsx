@@ -7,15 +7,21 @@ const MoodAIAnalysis = ({entries}) => {
     const [summary, setSummery] = useState('');
 
     const handleAISummary = async () => {
-        let entriesContent = '';
-        entries.forEach(entry => entriesContent = entriesContent + ", Diary entry: " + entry.content);
+        const messages = [
+            {
+                "role": "user",
+                "content": 'Can you create a mood/sentiment analysis based on the content of the following diary entries:'
+            }
+        ];
 
-        const message = {
+        entries.forEach(entry => messages.push({
             "role": "user",
-            "content": `Can you create a mood/sentiment analysis based on the content of the following diary entries: ${entriesContent}`
-        };
+            "content": entry.content
+        }))
 
-        const response = await postCompletion(message);
+        console.log(messages)
+        const response = await postCompletion(messages);
+        console.log(response)
         if (response) setSummery(response.message.content);
     };
 

@@ -2,24 +2,20 @@ import config from "../../config.js";
 
 const PATH = "https://gen-ai-wbs-consumer-api.onrender.com/api/v1/";
 const PATH_COMPLETIONS = "chat/completions";
-const API_TOKEN = config.apiToken;
-const API_MODE = config.mode;
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${API_TOKEN}`,
+    'Authorization': config.apiToken,
     'provider': 'open-ai',
-    'mode': API_MODE
+    'mode': config.mode
 }
 
 
-export const postCompletion = async (message) => {
+export const postCompletion = async (messages) => {
     const body = JSON.stringify({
         model: 'gpt-3.5-turbo',
-        messages: message,
+        messages: messages,
         max_tokens: 200,
     });
-
-    console.log('request body: ', body)
 
     const response = await fetch(`${PATH}${PATH_COMPLETIONS}`,
         {
